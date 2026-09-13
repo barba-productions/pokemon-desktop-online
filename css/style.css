@@ -1,0 +1,257 @@
+:root {
+  --poke-blue: #163a68;
+  --poke-navy: #0b1f3a;
+  --poke-red: #e63946;
+  --poke-yellow: #ffcb05;
+  --poke-green: #2ecc71;
+  --text-light: #f5f5f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(180deg, var(--poke-blue), var(--poke-navy));
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+header .brand img {
+  width: 40px;
+  height: 40px;
+}
+
+nav a {
+  color: var(--text-light);
+  text-decoration: none;
+  margin-left: 18px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+nav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 64px;
+  text-align: center;
+}
+
+h1 {
+  color: var(--poke-yellow);
+  margin-bottom: 8px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 460px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 8px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--poke-red);
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-row {
+  text-align: left;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  text-align: left;
+  margin-top: 16px;
+}
+
+.stat-grid .stat {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.stat .value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--poke-yellow);
+}
+
+.sprite-box {
+  width: 192px;
+  height: 192px;
+  margin: 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sprite-box img {
+  width: 192px;
+  height: 192px;
+  image-rendering: pixelated;
+  transition: filter 0.2s ease;
+}
+
+.sprite-box img.silhouette {
+  filter: brightness(0);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.options button {
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.options button.correct {
+  background: var(--poke-green);
+}
+
+.options button.wrong {
+  background: var(--poke-red);
+}
+
+.streak-badge {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--poke-yellow);
+}
+
+.share-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  text-align: left;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-text {
+  color: #ff8080;
+  font-size: 0.9rem;
+}
+
+.muted {
+  opacity: 0.75;
+  font-size: 0.9rem;
+}
+
+.pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.pokedex-grid .entry {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pokedex-grid .entry.caught {
+  background: rgba(46, 204, 113, 0.35);
+  font-weight: 700;
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}

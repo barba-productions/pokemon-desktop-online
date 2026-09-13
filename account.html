@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Sync - Pokemon Desktop Online</title>
+  <link rel="icon" href="assets/logo-240.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand"><img src="assets/logo-240.png" alt="logo" /> Pokemon Desktop Online</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="play.html">Play</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="account.html">Login / Sync</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Your account</h1>
+
+    <div class="card" id="auth-card">
+      <div class="form-row">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="At least 6 characters" />
+      </div>
+      <button class="btn btn-primary" id="login-btn">Log in</button>
+      <button class="btn btn-secondary" id="signup-btn">Create account</button>
+      <p class="error-text" id="auth-error"></p>
+    </div>
+
+    <div class="card" id="dashboard-card" hidden>
+      <p>Signed in as <strong id="user-email"></strong></p>
+      <button class="btn btn-secondary" id="logout-btn">Log out</button>
+
+      <hr />
+
+      <h2>Link your Pokemon Desktop</h2>
+      <p class="muted">Find your Device ID on your Pokemon Desktop's Settings page.</p>
+      <div class="form-row">
+        <label for="device-id-input">Device ID</label>
+        <input id="device-id-input" type="text" placeholder="AA:BB:CC:DD:EE:FF" />
+      </div>
+      <button class="btn btn-primary" id="link-device-btn">Link device</button>
+      <p class="muted" id="link-status"></p>
+
+      <div id="stats-section" hidden>
+        <h2>Your stats</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="value" id="stat-score">0</div>Lifetime score</div>
+          <div class="stat"><div class="value" id="stat-caught">0 / 1025</div>Pokedex caught</div>
+          <div class="stat"><div class="value" id="stat-correct">0</div>Total correct</div>
+          <div class="stat"><div class="value" id="stat-wrong">0</div>Total wrong</div>
+          <div class="stat"><div class="value" id="stat-days">0</div>Days played</div>
+          <div class="stat"><div class="value" id="stat-trainer">-</div>Trainer name</div>
+        </div>
+
+        <h2>Your Pokedex</h2>
+        <div class="pokedex-grid" id="pokedex-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Pokemon Desktop Online - Barba Productions</footer>
+
+  <script type="module" src="js/account.js"></script>
+</body>
+</html>

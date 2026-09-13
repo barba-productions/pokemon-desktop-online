@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play - Pokemon Desktop Online</title>
+  <link rel="icon" href="assets/logo-240.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand"><img src="assets/logo-240.png" alt="logo" /> Pokemon Desktop Online</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="play.html">Play</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="account.html">Login / Sync</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Who's that Pokemon?</h1>
+    <p class="muted" id="game-state">Loading...</p>
+    <div class="streak-badge">Streak: <span id="streak">0</span></div>
+
+    <div class="card">
+      <div class="sprite-box">
+        <img id="sprite" alt="Mystery Pokemon" />
+      </div>
+      <div class="options" id="options"></div>
+      <button class="btn btn-secondary" id="next-btn" hidden>Next</button>
+    </div>
+
+    <div class="card" id="game-over" hidden>
+      <h2>Game over!</h2>
+      <p>Your streak: <span id="final-streak">0</span></p>
+
+      <div class="form-row">
+        <label for="player-name">Your name (for the leaderboard)</label>
+        <input id="player-name" type="text" maxlength="20" placeholder="Trainer" />
+      </div>
+      <button class="btn btn-primary" id="submit-score-btn">Submit score</button>
+      <p class="muted" id="submit-status"></p>
+
+      <div class="share-row">
+        <button class="btn btn-secondary" id="share-btn">Share my score</button>
+        <button class="btn btn-secondary" id="play-again-btn">Play again</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>Pokemon Desktop Online - Barba Productions</footer>
+
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>
