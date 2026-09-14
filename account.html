@@ -53,19 +53,16 @@
     </div>
 
     <div class="card" id="dashboard-card" hidden>
-      <p><span data-i18n="dashboard_signed_in_as">Signed in as</span> <strong id="user-email"></strong></p>
-      <button class="btn btn-secondary" id="logout-btn" data-i18n="dashboard_logout_btn">Log out</button>
-
-      <hr />
-
-      <h2 data-i18n="link_title">Link your Pokemon Desktop</h2>
-      <p class="muted" data-i18n="link_help">Find your Activation Code on your Pokemon Desktop: press and hold the screen on the Home page for 4 seconds.</p>
-      <div class="form-row">
-        <label for="device-id-input" data-i18n="link_input_label">Activation Code</label>
-        <input id="device-id-input" type="text" placeholder="AAA-1234-BBB" />
+      <div id="link-section">
+        <h2 data-i18n="link_title">Link your Pokemon Desktop</h2>
+        <p class="muted" data-i18n="link_help">Find your Activation Code on your Pokemon Desktop: press and hold the screen on the Home page for 4 seconds.</p>
+        <div class="form-row">
+          <label for="device-id-input" data-i18n="link_input_label">Activation Code</label>
+          <input id="device-id-input" type="text" placeholder="AAA-1234-BBB" />
+        </div>
+        <button class="btn btn-primary" id="link-device-btn" data-i18n="link_btn">Link device</button>
+        <p class="muted" id="link-status"></p>
       </div>
-      <button class="btn btn-primary" id="link-device-btn" data-i18n="link_btn">Link device</button>
-      <p class="muted" id="link-status"></p>
 
       <div id="stats-section" hidden>
         <h2 data-i18n="stats_title">Your stats</h2>
@@ -81,6 +78,14 @@
         <h2 data-i18n="pokedex_title">Your Pokedex</h2>
         <div class="pokedex-grid" id="pokedex-grid"></div>
       </div>
+
+      <p class="muted" id="synced-status"></p>
+
+      <hr />
+
+      <p><span data-i18n="dashboard_signed_in_as">Signed in as:</span> <strong id="user-email"></strong></p>
+      <p id="linked-device-row" hidden><span data-i18n="linked_device_label">Linked Device:</span> <strong id="linked-device-code"></strong></p>
+      <button class="btn btn-secondary" id="unlink-device-btn" hidden data-i18n="unlink_btn">Unlink Device</button>
     </div>
   </main>
 

@@ -11,10 +11,9 @@ const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/maste
 const spriteEl = document.getElementById("sprite");
 const optionsEl = document.getElementById("options");
 const streakEl = document.getElementById("streak");
-const stateEl = document.getElementById("game-state");
+const gameOverSuffixEl = document.getElementById("game-over-suffix");
 const oakMessageEl = document.getElementById("oak-message");
 const gameOverCard = document.getElementById("game-over");
-const finalStreakEl = document.getElementById("final-streak");
 const nameInput = document.getElementById("player-name");
 const submitScoreBtn = document.getElementById("submit-score-btn");
 const submitStatusEl = document.getElementById("submit-status");
@@ -81,6 +80,8 @@ function shuffle(array) {
 function loadNextEncounter() {
   optionsEl.innerHTML = "";
   oakMessageEl.hidden = true;
+  playAgainBtn.hidden = true;
+  gameOverSuffixEl.hidden = true;
   awaitingNext = false;
 
   const encounter = encounterQueue.shift();
@@ -106,8 +107,6 @@ function loadNextEncounter() {
     btn.addEventListener("click", () => handleAnswer(id, btn));
     optionsEl.appendChild(btn);
   });
-
-  stateEl.textContent = `${t("play_streak_label")} ${streak}`;
 }
 
 function handleAnswer(chosenId, btnEl) {
@@ -124,20 +123,19 @@ function handleAnswer(chosenId, btnEl) {
     btnEl.classList.add("correct");
     streak += 1;
     streakEl.textContent = String(streak);
-    stateEl.textContent = t("play_state_correct");
     setTimeout(loadNextEncounter, 900);
   } else {
     btnEl.classList.add("wrong");
     const correctBtn = buttons.find((b) => Number(b.dataset.id) === currentAnswerId);
     if (correctBtn) correctBtn.classList.add("correct");
-    stateEl.textContent = t("play_state_wrong");
+    gameOverSuffixEl.hidden = false;
     oakMessageEl.hidden = false;
+    playAgainBtn.hidden = false;
     endGame();
   }
 }
 
 function endGame() {
-  finalStreakEl.textContent = String(streak);
   gameOverCard.hidden = false;
   submitStatusEl.textContent = "";
   submitScoreBtn.disabled = false;
@@ -165,19 +163,41 @@ async function submitScore() {
 function shareScore() {
   const text = `I got a streak of ${streak} on Pokemon Desktop Online! Can you beat it?`;
   const url = window.location.origin + window.location.pathname;
+  const fullText = `${text} ${url}`;
 
   if (navigator.share) {
     navigator.share({ title: "Pokemon Desktop Online", text, url }).catch(() => {});
     return;
   }
 
-  navigator.clipboard
-    .writeText(`${text} ${url}`)
-    .then(() => {
-      shareBtn.textContent = t("play_share_copied");
-      setTimeout(() => (shareBtn.textContent = t("play_share_copy_label")), 1500);
-    })
-    .catch(() => {});
+  const showCopiedFeedback = () => {
+    shareBtn.textContent = t("play_share_copied");
+    setTimeout(() => (shareBtn.textContent = t("play_share_btn")), 1500);
+  };
+
+  const fallbackCopy = () => {
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = fullText;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      showCopiedFeedback();
+    } catch (err) {
+      console.error(err);
+      window.prompt(t("play_share_copy_label"), fullText);
+    }
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(fullText).then(showCopiedFeedback).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
 }
 
 function restart() {

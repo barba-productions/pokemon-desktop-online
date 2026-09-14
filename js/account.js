@@ -3,11 +3,11 @@ import {
   db,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
   onAuthStateChanged,
   doc,
   getDoc,
   setDoc,
+  deleteField,
 } from "./firebase.js";
 import { POKEMON_NAMES } from "./pokemon-names.js";
 
@@ -51,14 +51,18 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const authErrorEl = document.getElementById("auth-error");
-const logoutBtn = document.getElementById("logout-btn");
 const userEmailEl = document.getElementById("user-email");
 
+const linkSectionEl = document.getElementById("link-section");
 const deviceIdInput = document.getElementById("device-id-input");
 const linkDeviceBtn = document.getElementById("link-device-btn");
 const linkStatusEl = document.getElementById("link-status");
 const statsSection = document.getElementById("stats-section");
 const pokedexGrid = document.getElementById("pokedex-grid");
+const linkedDeviceRowEl = document.getElementById("linked-device-row");
+const linkedDeviceCodeEl = document.getElementById("linked-device-code");
+const unlinkDeviceBtn = document.getElementById("unlink-device-btn");
+const syncedStatusEl = document.getElementById("synced-status");
 
 function base64ToBytes(b64) {
   const binary = atob(b64);
@@ -117,21 +121,27 @@ async function loadLinkedDevice(uid) {
   const linkedDeviceId = userData.linkedDeviceId || null;
 
   if (!linkedDeviceId) {
-    linkStatusEl.textContent = t("link_status_none");
+    linkSectionEl.hidden = false;
+    linkedDeviceRowEl.hidden = true;
+    unlinkDeviceBtn.hidden = true;
     statsSection.hidden = true;
+    linkStatusEl.textContent = t("link_status_none");
     return;
   }
 
-  deviceIdInput.value = userData.linkedActivationCode || "";
-  linkStatusEl.textContent = t("link_status_linked");
+  linkSectionEl.hidden = true;
+  linkedDeviceCodeEl.textContent = userData.linkedActivationCode || linkedDeviceId;
+  linkedDeviceRowEl.hidden = false;
+  unlinkDeviceBtn.hidden = false;
 
   const deviceSnap = await getDoc(doc(db, "devices", linkedDeviceId));
   if (!deviceSnap.exists()) {
-    linkStatusEl.textContent = t("link_status_no_stats");
     statsSection.hidden = true;
+    syncedStatusEl.textContent = t("link_status_no_stats");
     return;
   }
 
+  syncedStatusEl.textContent = "";
   renderStats(deviceSnap.data());
 }
 
@@ -165,6 +175,24 @@ async function linkDevice() {
   }
 }
 
+async function unlinkDevice() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) return;
+  if (!window.confirm(t("unlink_confirm"))) return;
+
+  try {
+    await setDoc(
+      doc(db, "users", uid),
+      { linkedDeviceId: deleteField(), linkedActivationCode: deleteField() },
+      { merge: true }
+    );
+    deviceIdInput.value = "";
+    await loadLinkedDevice(uid);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function login() {
   authErrorEl.textContent = "";
   try {
@@ -183,10 +211,6 @@ async function signup() {
   }
 }
 
-async function logout() {
-  await signOut(auth);
-}
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
     authCard.hidden = true;
@@ -201,5 +225,5 @@ onAuthStateChanged(auth, (user) => {
 
 loginBtn.addEventListener("click", login);
 signupBtn.addEventListener("click", signup);
-logoutBtn.addEventListener("click", logout);
 linkDeviceBtn.addEventListener("click", linkDevice);
+unlinkDeviceBtn.addEventListener("click", unlinkDevice);
