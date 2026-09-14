@@ -1,11 +1,12 @@
 import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { POKEMON_NAMES } from "./pokemon-names.js";
 
 const t = (key) => window.PDO_I18N.t(key);
 
 const POKEDEX_TOTAL = 1025;
 const OPTION_COUNT = 4;
+const QUEUE_SIZE = 5;
 const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
-const POKEAPI_BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 
 const spriteEl = document.getElementById("sprite");
 const optionsEl = document.getElementById("options");
@@ -24,6 +25,11 @@ let streak = 0;
 let currentAnswerId = null;
 let awaitingNext = false;
 
+// Pre-built encounters (name lookups are instant, only the sprite image needs
+// a head start) so advancing to the next round never waits on the network.
+const encounterQueue = [];
+const preloadedImages = new Map(); // id -> Image, keeps the browser's own image cache warm
+
 function randomId(exclude = new Set()) {
   let id;
   do {
@@ -32,18 +38,35 @@ function randomId(exclude = new Set()) {
   return id;
 }
 
-function formatName(rawName) {
-  return rawName
-    .split("-")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
+function pokemonName(id) {
+  return POKEMON_NAMES[id - 1] || "???";
 }
 
-async function fetchPokemonName(id) {
-  const res = await fetch(POKEAPI_BASE_URL + id);
-  if (!res.ok) throw new Error("PokeAPI request failed: " + res.status);
-  const data = await res.json();
-  return formatName(data.name);
+function preloadSprite(id) {
+  if (preloadedImages.has(id)) return;
+  const img = new Image();
+  img.src = SPRITE_BASE_URL + id + ".png";
+  preloadedImages.set(id, img);
+}
+
+function buildEncounter() {
+  const correctId = randomId();
+  const wrongIds = [];
+  const used = new Set([correctId]);
+  while (wrongIds.length < OPTION_COUNT - 1) {
+    const id = randomId(used);
+    used.add(id);
+    wrongIds.push(id);
+  }
+
+  preloadSprite(correctId);
+  return { correctId, optionIds: shuffle([correctId, ...wrongIds]) };
+}
+
+function fillQueue() {
+  while (encounterQueue.length < QUEUE_SIZE) {
+    encounterQueue.push(buildEncounter());
+  }
 }
 
 function shuffle(array) {
@@ -55,34 +78,23 @@ function shuffle(array) {
   return copy;
 }
 
-async function loadNextEncounter() {
-  stateEl.textContent = t("play_loading");
+function loadNextEncounter() {
   optionsEl.innerHTML = "";
   nextBtn.hidden = true;
   awaitingNext = false;
 
-  const correctId = randomId();
-  currentAnswerId = correctId;
+  const encounter = encounterQueue.shift();
+  fillQueue(); // top the buffer back up in the background for the round after this one
 
-  const wrongIds = [];
-  const used = new Set([correctId]);
-  while (wrongIds.length < OPTION_COUNT - 1) {
-    const id = randomId(used);
-    used.add(id);
-    wrongIds.push(id);
-  }
+  currentAnswerId = encounter.correctId;
 
-  const allIds = shuffle([correctId, ...wrongIds]);
-  const names = await Promise.all(allIds.map((id) => fetchPokemonName(id)));
-
-  spriteEl.src = SPRITE_BASE_URL + correctId + ".png";
+  spriteEl.src = SPRITE_BASE_URL + encounter.correctId + ".png";
   spriteEl.classList.add("silhouette");
-  spriteEl.dataset.correctId = String(correctId);
+  spriteEl.dataset.correctId = String(encounter.correctId);
 
-  optionsEl.innerHTML = "";
-  allIds.forEach((id, index) => {
+  encounter.optionIds.forEach((id) => {
     const btn = document.createElement("button");
-    btn.textContent = names[index];
+    btn.textContent = pokemonName(id);
     btn.dataset.id = String(id);
     btn.addEventListener("click", () => handleAnswer(id, btn));
     optionsEl.appendChild(btn);
@@ -171,4 +183,5 @@ submitScoreBtn.addEventListener("click", submitScore);
 shareBtn.addEventListener("click", shareScore);
 playAgainBtn.addEventListener("click", restart);
 
+fillQueue();
 loadNextEncounter();
