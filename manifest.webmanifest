@@ -1,0 +1,25 @@
+{
+  "name": "Pokémon Desktop",
+  "short_name": "Pokémon Desktop",
+  "description": "The web companion to your Pokémon Desktop hardware.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#163a68",
+  "theme_color": "#163a68",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
