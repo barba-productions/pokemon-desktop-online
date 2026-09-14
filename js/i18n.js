@@ -9,7 +9,7 @@
       nav_home: "Home",
       nav_play: "Play",
       nav_leaderboard: "Leaderboard",
-      nav_account: "Login / Sync",
+      nav_account: "Your Pokédex",
 
       home_subtitle: "The web companion to your Pokemon Desktop hardware.",
       card_play_title: "Play the streak game",
@@ -82,7 +82,7 @@
       nav_home: "Início",
       nav_play: "Jogar",
       nav_leaderboard: "Ranking",
-      nav_account: "Entrar / Sincronizar",
+      nav_account: "Sua Pokédex",
 
       home_subtitle: "O companheiro web do seu Pokemon Desktop.",
       card_play_title: "Jogue o desafio de adivinhar o Pokémon",
@@ -155,7 +155,7 @@
       nav_home: "Inicio",
       nav_play: "Jugar",
       nav_leaderboard: "Clasificación",
-      nav_account: "Iniciar sesión / Sincronizar",
+      nav_account: "Tu Pokédex",
 
       home_subtitle: "El compañero web de tu Pokemon Desktop.",
       card_play_title: "Juega la racha de aciertos",
@@ -228,7 +228,7 @@
       nav_home: "Start",
       nav_play: "Spielen",
       nav_leaderboard: "Bestenliste",
-      nav_account: "Anmelden / Sync",
+      nav_account: "Deine Pokédex",
 
       home_subtitle: "Der Web-Begleiter zu deinem Pokemon Desktop.",
       card_play_title: "Serien-Spiel spielen",

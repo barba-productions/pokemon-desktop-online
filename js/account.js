@@ -90,21 +90,20 @@ function renderStats(device) {
   const bytes = device.caughtBits ? base64ToBytes(device.caughtBits) : new Uint8Array(0);
 
   for (let id = 1; id <= POKEDEX_TOTAL; id++) {
-    const caught = isCaught(bytes, id);
-    const cell = document.createElement("div");
-    cell.className = "entry" + (caught ? " caught" : "");
-    cell.title = caught ? `#${id} ${pokemonName(id)}` : `#${id}`;
+    if (!isCaught(bytes, id)) continue;
 
-    if (caught) {
-      const img = document.createElement("img");
-      img.src = SPRITE_BASE_URL + id + ".png";
-      img.alt = pokemonName(id);
-      img.loading = "lazy";
-      const label = document.createElement("span");
-      label.textContent = pokemonName(id);
-      cell.appendChild(img);
-      cell.appendChild(label);
-    }
+    const cell = document.createElement("div");
+    cell.className = "entry caught";
+    cell.title = `#${id} ${pokemonName(id)}`;
+
+    const img = document.createElement("img");
+    img.src = SPRITE_BASE_URL + id + ".png";
+    img.alt = pokemonName(id);
+    img.loading = "lazy";
+    const label = document.createElement("span");
+    label.textContent = pokemonName(id);
+    cell.appendChild(img);
+    cell.appendChild(label);
 
     pokedexGrid.appendChild(cell);
   }

@@ -11,6 +11,11 @@
   box-sizing: border-box;
 }
 
+/* Guard against component classes (e.g. .btn's display:inline-block) overriding [hidden]. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', Roboto, sans-serif;
@@ -392,4 +397,20 @@ footer {
   padding: 16px;
   font-size: 0.8rem;
   opacity: 0.6;
+}
+
+footer .footer-logout {
+  display: block;
+  margin: 0 auto 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+footer a {
+  color: var(--text-light);
 }
