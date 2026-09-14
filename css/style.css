@@ -55,6 +55,12 @@ header .brand {
   font-size: 0.85rem;
   width: auto;
   margin: 0;
+  color-scheme: dark;
+}
+
+.lang-select option {
+  color: #111;
+  background: #fff;
 }
 
 .hamburger-btn {
@@ -102,6 +108,7 @@ header .brand {
 
   .nav-controls {
     order: 2;
+    margin-left: auto;
   }
 }
 
