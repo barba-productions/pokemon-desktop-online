@@ -11,7 +11,36 @@ import {
 } from "./firebase.js";
 
 const POKEDEX_TOTAL = 1025;
-const DEVICE_ID_PATTERN = /^[0-9A-F]{2}(:[0-9A-F]{2}){5}$/i;
+// Same custom alphabet/algorithm as generateActivationCode() in activationHelper.ino.
+const ACTIVATION_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+const ACTIVATION_CODE_PATTERN = /^[23456789A-HJ-NP-Z]{3}-[23456789A-HJ-NP-Z]{4}-[23456789A-HJ-NP-Z]{3}$/i;
+const t = (key) => window.PDO_I18N.t(key);
+
+// Reverses generateActivationCode()/decodeActivationCodeToMac() to recover the
+// device's MAC-based ID (the key used for devices/{deviceId} in Firestore).
+function decodeActivationCode(code) {
+  const compact = code.toUpperCase().replace(/-/g, "");
+  if (compact.length !== 10) return null;
+
+  const base = BigInt(ACTIVATION_CODE_ALPHABET.length);
+  let reversedMac = 0n;
+  for (const ch of compact) {
+    const value = ACTIVATION_CODE_ALPHABET.indexOf(ch);
+    if (value < 0) return null;
+    reversedMac = reversedMac * base + BigInt(value);
+  }
+
+  let mac = 0n;
+  for (let i = 0; i < 6; i++) {
+    const b = (reversedMac >> BigInt(8 * i)) & 0xffn;
+    mac = (mac << 8n) | b;
+  }
+
+  const hex = mac.toString(16).toUpperCase().padStart(12, "0");
+  const bytes = [];
+  for (let i = 0; i < 12; i += 2) bytes.push(hex.slice(i, i + 2));
+  return bytes.join(":");
+}
 
 const authCard = document.getElementById("auth-card");
 const dashboardCard = document.getElementById("dashboard-card");
@@ -67,20 +96,21 @@ function renderStats(device) {
 
 async function loadLinkedDevice(uid) {
   const userSnap = await getDoc(doc(db, "users", uid));
-  const linkedDeviceId = userSnap.exists() ? userSnap.data().linkedDeviceId : null;
+  const userData = userSnap.exists() ? userSnap.data() : {};
+  const linkedDeviceId = userData.linkedDeviceId || null;
 
   if (!linkedDeviceId) {
-    linkStatusEl.textContent = "No device linked yet.";
+    linkStatusEl.textContent = t("link_status_none");
     statsSection.hidden = true;
     return;
   }
 
-  deviceIdInput.value = linkedDeviceId;
-  linkStatusEl.textContent = `Linked to ${linkedDeviceId}`;
+  deviceIdInput.value = userData.linkedActivationCode || "";
+  linkStatusEl.textContent = t("link_status_linked");
 
   const deviceSnap = await getDoc(doc(db, "devices", linkedDeviceId));
   if (!deviceSnap.exists()) {
-    linkStatusEl.textContent = `Linked to ${linkedDeviceId}, but no stats received yet. Finish a game on your device first.`;
+    linkStatusEl.textContent = t("link_status_no_stats");
     statsSection.hidden = true;
     return;
   }
@@ -92,19 +122,29 @@ async function linkDevice() {
   const uid = auth.currentUser?.uid;
   if (!uid) return;
 
-  const deviceId = deviceIdInput.value.trim().toUpperCase();
-  if (!DEVICE_ID_PATTERN.test(deviceId)) {
-    linkStatusEl.textContent = "That doesn't look like a valid Device ID (format AA:BB:CC:DD:EE:FF).";
+  const activationCode = deviceIdInput.value.trim().toUpperCase();
+  if (!ACTIVATION_CODE_PATTERN.test(activationCode)) {
+    linkStatusEl.textContent = t("link_status_invalid");
     return;
   }
 
-  linkStatusEl.textContent = "Linking...";
+  const deviceId = decodeActivationCode(activationCode);
+  if (!deviceId) {
+    linkStatusEl.textContent = t("link_status_invalid");
+    return;
+  }
+
+  linkStatusEl.textContent = t("link_status_linking");
   try {
-    await setDoc(doc(db, "users", uid), { linkedDeviceId: deviceId }, { merge: true });
+    await setDoc(
+      doc(db, "users", uid),
+      { linkedDeviceId: deviceId, linkedActivationCode: activationCode },
+      { merge: true }
+    );
     await loadLinkedDevice(uid);
   } catch (err) {
     console.error(err);
-    linkStatusEl.textContent = "Could not link device. Try again.";
+    linkStatusEl.textContent = t("link_status_error");
   }
 }
 

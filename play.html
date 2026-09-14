@@ -10,47 +10,57 @@
 <body>
   <header>
     <div class="brand"><img src="assets/logo-240.png" alt="logo" /> Pokemon Desktop Online</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="play.html">Play</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="account.html">Login / Sync</a>
+    <nav class="site-nav">
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="play.html" data-i18n="nav_play">Play</a>
+      <a href="leaderboard.html" data-i18n="nav_leaderboard">Leaderboard</a>
+      <a href="account.html" data-i18n="nav_account">Login / Sync</a>
     </nav>
+    <div class="nav-controls">
+      <select class="lang-select" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="pt">PT</option>
+        <option value="es">ES</option>
+        <option value="de">DE</option>
+      </select>
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </header>
 
   <main>
-    <h1>Who's that Pokemon?</h1>
-    <p class="muted" id="game-state">Loading...</p>
-    <div class="streak-badge">Streak: <span id="streak">0</span></div>
+    <h1 data-i18n="play_title">Who's that Pokemon?</h1>
+    <p class="muted" id="game-state" data-i18n="play_loading">Loading...</p>
+    <div class="streak-badge"><span data-i18n="play_streak_label">Streak:</span> <span id="streak">0</span></div>
 
     <div class="card">
       <div class="sprite-box">
         <img id="sprite" alt="Mystery Pokemon" />
       </div>
       <div class="options" id="options"></div>
-      <button class="btn btn-secondary" id="next-btn" hidden>Next</button>
+      <button class="btn btn-secondary" id="next-btn" hidden data-i18n="play_next_btn">Next</button>
     </div>
 
     <div class="card" id="game-over" hidden>
-      <h2>Game over!</h2>
-      <p>Your streak: <span id="final-streak">0</span></p>
+      <h2 data-i18n="play_game_over_title">Game over!</h2>
+      <p><span data-i18n="play_your_streak">Your streak:</span> <span id="final-streak">0</span></p>
 
       <div class="form-row">
-        <label for="player-name">Your name (for the leaderboard)</label>
-        <input id="player-name" type="text" maxlength="20" placeholder="Trainer" />
+        <label for="player-name" data-i18n="play_name_label">Your name (for the leaderboard)</label>
+        <input id="player-name" type="text" maxlength="20" data-i18n-placeholder="play_name_placeholder" placeholder="Trainer" />
       </div>
-      <button class="btn btn-primary" id="submit-score-btn">Submit score</button>
+      <button class="btn btn-primary" id="submit-score-btn" data-i18n="play_submit_btn">Submit score</button>
       <p class="muted" id="submit-status"></p>
 
       <div class="share-row">
-        <button class="btn btn-secondary" id="share-btn">Share my score</button>
-        <button class="btn btn-secondary" id="play-again-btn">Play again</button>
+        <button class="btn btn-secondary" id="share-btn" data-i18n="play_share_btn">Share my score</button>
+        <button class="btn btn-secondary" id="play-again-btn" data-i18n="play_again_btn">Play again</button>
       </div>
     </div>
   </main>
 
-  <footer>Pokemon Desktop Online - Barba Productions</footer>
+  <footer data-i18n="footer_text">Pokemon Desktop Online - Barba Productions</footer>
 
+  <script src="js/i18n.js"></script>
   <script type="module" src="js/game.js"></script>
 </body>
 </html>

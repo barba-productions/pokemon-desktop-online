@@ -1,5 +1,7 @@
 import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
 
+const t = (key) => window.PDO_I18N.t(key);
+
 const POKEDEX_TOTAL = 1025;
 const OPTION_COUNT = 4;
 const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
@@ -54,7 +56,7 @@ function shuffle(array) {
 }
 
 async function loadNextEncounter() {
-  stateEl.textContent = "Loading...";
+  stateEl.textContent = t("play_loading");
   optionsEl.innerHTML = "";
   nextBtn.hidden = true;
   awaitingNext = false;
@@ -86,7 +88,7 @@ async function loadNextEncounter() {
     optionsEl.appendChild(btn);
   });
 
-  stateEl.textContent = `Streak: ${streak}`;
+  stateEl.textContent = `${t("play_streak_label")} ${streak}`;
 }
 
 function handleAnswer(chosenId, btnEl) {
@@ -103,13 +105,13 @@ function handleAnswer(chosenId, btnEl) {
     btnEl.classList.add("correct");
     streak += 1;
     streakEl.textContent = String(streak);
-    stateEl.textContent = "Correct! Next Pokemon...";
+    stateEl.textContent = t("play_state_correct");
     setTimeout(loadNextEncounter, 900);
   } else {
     btnEl.classList.add("wrong");
     const correctBtn = buttons.find((b) => Number(b.dataset.id) === currentAnswerId);
     if (correctBtn) correctBtn.classList.add("correct");
-    stateEl.textContent = "Wrong! Game over.";
+    stateEl.textContent = t("play_state_wrong");
     endGame();
   }
 }
@@ -124,7 +126,7 @@ function endGame() {
 async function submitScore() {
   const name = (nameInput.value || "Trainer").trim().slice(0, 20) || "Trainer";
   submitScoreBtn.disabled = true;
-  submitStatusEl.textContent = "Submitting...";
+  submitStatusEl.textContent = t("play_submit_submitting");
   try {
     await addDoc(collection(db, "leaderboard"), {
       name,
@@ -132,10 +134,10 @@ async function submitScore() {
       deviceId: null,
       createdAt: serverTimestamp(),
     });
-    submitStatusEl.textContent = "Score submitted! Check the leaderboard.";
+    submitStatusEl.textContent = t("play_submit_ok");
   } catch (err) {
     console.error(err);
-    submitStatusEl.textContent = "Could not submit score (is Firebase configured yet?).";
+    submitStatusEl.textContent = t("play_submit_error");
     submitScoreBtn.disabled = false;
   }
 }
@@ -152,8 +154,8 @@ function shareScore() {
   navigator.clipboard
     .writeText(`${text} ${url}`)
     .then(() => {
-      shareBtn.textContent = "Copied!";
-      setTimeout(() => (shareBtn.textContent = "Copy share text"), 1500);
+      shareBtn.textContent = t("play_share_copied");
+      setTimeout(() => (shareBtn.textContent = t("play_share_copy_label")), 1500);
     })
     .catch(() => {});
 }

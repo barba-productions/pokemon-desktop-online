@@ -10,63 +10,73 @@
 <body>
   <header>
     <div class="brand"><img src="assets/logo-240.png" alt="logo" /> Pokemon Desktop Online</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="play.html">Play</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="account.html">Login / Sync</a>
+    <nav class="site-nav">
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="play.html" data-i18n="nav_play">Play</a>
+      <a href="leaderboard.html" data-i18n="nav_leaderboard">Leaderboard</a>
+      <a href="account.html" data-i18n="nav_account">Login / Sync</a>
     </nav>
+    <div class="nav-controls">
+      <select class="lang-select" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="pt">PT</option>
+        <option value="es">ES</option>
+        <option value="de">DE</option>
+      </select>
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </header>
 
   <main>
-    <h1>Your account</h1>
+    <h1 data-i18n="account_title">Your account</h1>
 
     <div class="card" id="auth-card">
       <div class="form-row">
-        <label for="email">Email</label>
+        <label for="email" data-i18n="auth_email_label">Email</label>
         <input id="email" type="email" placeholder="you@example.com" />
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="At least 6 characters" />
+        <label for="password" data-i18n="auth_password_label">Password</label>
+        <input id="password" type="password" data-i18n-placeholder="auth_password_placeholder" placeholder="At least 6 characters" />
       </div>
-      <button class="btn btn-primary" id="login-btn">Log in</button>
-      <button class="btn btn-secondary" id="signup-btn">Create account</button>
+      <button class="btn btn-primary" id="login-btn" data-i18n="auth_login_btn">Log in</button>
+      <button class="btn btn-secondary" id="signup-btn" data-i18n="auth_signup_btn">Create account</button>
       <p class="error-text" id="auth-error"></p>
     </div>
 
     <div class="card" id="dashboard-card" hidden>
-      <p>Signed in as <strong id="user-email"></strong></p>
-      <button class="btn btn-secondary" id="logout-btn">Log out</button>
+      <p><span data-i18n="dashboard_signed_in_as">Signed in as</span> <strong id="user-email"></strong></p>
+      <button class="btn btn-secondary" id="logout-btn" data-i18n="dashboard_logout_btn">Log out</button>
 
       <hr />
 
-      <h2>Link your Pokemon Desktop</h2>
-      <p class="muted">Find your Device ID on your Pokemon Desktop's Settings page.</p>
+      <h2 data-i18n="link_title">Link your Pokemon Desktop</h2>
+      <p class="muted" data-i18n="link_help">Find your Activation Code on your Pokemon Desktop: press and hold the screen on the Home page for 4 seconds.</p>
       <div class="form-row">
-        <label for="device-id-input">Device ID</label>
-        <input id="device-id-input" type="text" placeholder="AA:BB:CC:DD:EE:FF" />
+        <label for="device-id-input" data-i18n="link_input_label">Activation Code</label>
+        <input id="device-id-input" type="text" placeholder="3JG-VUZF-NG6" />
       </div>
-      <button class="btn btn-primary" id="link-device-btn">Link device</button>
+      <button class="btn btn-primary" id="link-device-btn" data-i18n="link_btn">Link device</button>
       <p class="muted" id="link-status"></p>
 
       <div id="stats-section" hidden>
-        <h2>Your stats</h2>
+        <h2 data-i18n="stats_title">Your stats</h2>
         <div class="stat-grid">
-          <div class="stat"><div class="value" id="stat-score">0</div>Lifetime score</div>
-          <div class="stat"><div class="value" id="stat-caught">0 / 1025</div>Pokedex caught</div>
-          <div class="stat"><div class="value" id="stat-correct">0</div>Total correct</div>
-          <div class="stat"><div class="value" id="stat-wrong">0</div>Total wrong</div>
-          <div class="stat"><div class="value" id="stat-days">0</div>Days played</div>
-          <div class="stat"><div class="value" id="stat-trainer">-</div>Trainer name</div>
+          <div class="stat"><div class="value" id="stat-score">0</div><span data-i18n="stat_score">Lifetime score</span></div>
+          <div class="stat"><div class="value" id="stat-caught">0 / 1025</div><span data-i18n="stat_caught">Pokedex caught</span></div>
+          <div class="stat"><div class="value" id="stat-correct">0</div><span data-i18n="stat_correct">Total correct</span></div>
+          <div class="stat"><div class="value" id="stat-wrong">0</div><span data-i18n="stat_wrong">Total wrong</span></div>
+          <div class="stat"><div class="value" id="stat-days">0</div><span data-i18n="stat_days">Days played</span></div>
+          <div class="stat"><div class="value" id="stat-trainer">-</div><span data-i18n="stat_trainer">Trainer name</span></div>
         </div>
 
-        <h2>Your Pokedex</h2>
+        <h2 data-i18n="pokedex_title">Your Pokedex</h2>
         <div class="pokedex-grid" id="pokedex-grid"></div>
       </div>
     </div>
   </main>
 
-  <footer>Pokemon Desktop Online - Barba Productions</footer>
+  <footer data-i18n="footer_text">Pokemon Desktop Online - Barba Productions</footer>
 
+  <script src="js/i18n.js"></script>
   <script type="module" src="js/account.js"></script>
 </body>
 </html>

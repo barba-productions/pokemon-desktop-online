@@ -1,15 +1,16 @@
 import { db, collection, query, orderBy, limit, getDocs } from "./firebase.js";
 
+const t = (key) => window.PDO_I18N.t(key);
 const listEl = document.getElementById("leaderboard-body");
 
 async function loadLeaderboard() {
-  listEl.innerHTML = `<tr><td colspan="2">Loading...</td></tr>`;
+  listEl.innerHTML = `<tr><td colspan="2">${t("leaderboard_loading")}</td></tr>`;
   try {
     const q = query(collection(db, "leaderboard"), orderBy("streak", "desc"), limit(20));
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      listEl.innerHTML = `<tr><td colspan="2">No scores yet. Be the first!</td></tr>`;
+      listEl.innerHTML = `<tr><td colspan="2">${t("leaderboard_empty")}</td></tr>`;
       return;
     }
 
@@ -22,7 +23,7 @@ async function loadLeaderboard() {
     });
   } catch (err) {
     console.error(err);
-    listEl.innerHTML = `<tr><td colspan="2">Could not load leaderboard (is Firebase configured yet?).</td></tr>`;
+    listEl.innerHTML = `<tr><td colspan="2">${t("leaderboard_error")}</td></tr>`;
   }
 }
 
