@@ -356,8 +356,8 @@ input::placeholder {
 
 .pokedex-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
   margin-top: 16px;
 }
 
@@ -365,10 +365,21 @@ input::placeholder {
   aspect-ratio: 1;
   border-radius: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  gap: 2px;
+  padding: 4px;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  text-align: center;
   background: rgba(255, 255, 255, 0.05);
+}
+
+.pokedex-grid .entry img {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
 }
 
 .pokedex-grid .entry.caught {

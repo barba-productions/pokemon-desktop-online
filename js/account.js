@@ -9,8 +9,10 @@ import {
   getDoc,
   setDoc,
 } from "./firebase.js";
+import { POKEMON_NAMES } from "./pokemon-names.js";
 
 const POKEDEX_TOTAL = 1025;
+const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 // Same custom alphabet/algorithm as generateActivationCode() in activationHelper.ino.
 const ACTIVATION_CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 const ACTIVATION_CODE_PATTERN = /^[23456789A-HJ-NP-Z]{3}-[23456789A-HJ-NP-Z]{4}-[23456789A-HJ-NP-Z]{3}$/i;
@@ -72,6 +74,10 @@ function isCaught(bytes, id) {
   return byteIndex < bytes.length && (bytes[byteIndex] & bitMask) !== 0;
 }
 
+function pokemonName(id) {
+  return POKEMON_NAMES[id - 1] || "???";
+}
+
 function renderStats(device) {
   document.getElementById("stat-score").textContent = device.lifetimeScore ?? 0;
   document.getElementById("stat-caught").textContent = `${device.caughtCount ?? 0} / ${POKEDEX_TOTAL}`;
@@ -84,10 +90,22 @@ function renderStats(device) {
   const bytes = device.caughtBits ? base64ToBytes(device.caughtBits) : new Uint8Array(0);
 
   for (let id = 1; id <= POKEDEX_TOTAL; id++) {
+    const caught = isCaught(bytes, id);
     const cell = document.createElement("div");
-    cell.className = "entry" + (isCaught(bytes, id) ? " caught" : "");
-    cell.title = "#" + id;
-    cell.textContent = isCaught(bytes, id) ? "#" + id : "";
+    cell.className = "entry" + (caught ? " caught" : "");
+    cell.title = caught ? `#${id} ${pokemonName(id)}` : `#${id}`;
+
+    if (caught) {
+      const img = document.createElement("img");
+      img.src = SPRITE_BASE_URL + id + ".png";
+      img.alt = pokemonName(id);
+      img.loading = "lazy";
+      const label = document.createElement("span");
+      label.textContent = pokemonName(id);
+      cell.appendChild(img);
+      cell.appendChild(label);
+    }
+
     pokedexGrid.appendChild(cell);
   }
 
