@@ -12,7 +12,7 @@ const spriteEl = document.getElementById("sprite");
 const optionsEl = document.getElementById("options");
 const streakEl = document.getElementById("streak");
 const stateEl = document.getElementById("game-state");
-const nextBtn = document.getElementById("next-btn");
+const oakMessageEl = document.getElementById("oak-message");
 const gameOverCard = document.getElementById("game-over");
 const finalStreakEl = document.getElementById("final-streak");
 const nameInput = document.getElementById("player-name");
@@ -80,7 +80,7 @@ function shuffle(array) {
 
 function loadNextEncounter() {
   optionsEl.innerHTML = "";
-  nextBtn.hidden = true;
+  oakMessageEl.hidden = true;
   awaitingNext = false;
 
   const encounter = encounterQueue.shift();
@@ -131,6 +131,7 @@ function handleAnswer(chosenId, btnEl) {
     const correctBtn = buttons.find((b) => Number(b.dataset.id) === currentAnswerId);
     if (correctBtn) correctBtn.classList.add("correct");
     stateEl.textContent = t("play_state_wrong");
+    oakMessageEl.hidden = false;
     endGame();
   }
 }
