@@ -5,7 +5,7 @@ const t = (key) => window.PDO_I18N.t(key);
 
 const POKEDEX_TOTAL = 1025;
 const OPTION_COUNT = 4;
-const QUEUE_SIZE = 5;
+const QUEUE_SIZE = 10;
 const SPRITE_BASE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 
 const spriteEl = document.getElementById("sprite");
@@ -88,14 +88,21 @@ function loadNextEncounter() {
 
   currentAnswerId = encounter.correctId;
 
+  spriteEl.classList.add("sprite-enter");
   spriteEl.src = SPRITE_BASE_URL + encounter.correctId + ".png";
   spriteEl.classList.add("silhouette");
   spriteEl.dataset.correctId = String(encounter.correctId);
+  // Force the browser to register the "entering" state before removing it, so the fade-in actually plays.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => spriteEl.classList.remove("sprite-enter"));
+  });
 
-  encounter.optionIds.forEach((id) => {
+  encounter.optionIds.forEach((id, index) => {
     const btn = document.createElement("button");
     btn.textContent = pokemonName(id);
     btn.dataset.id = String(id);
+    btn.className = "option-enter";
+    btn.style.animationDelay = `${index * 40}ms`;
     btn.addEventListener("click", () => handleAnswer(id, btn));
     optionsEl.appendChild(btn);
   });
