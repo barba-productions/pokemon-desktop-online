@@ -33,7 +33,6 @@ header {
   padding: 16px 24px;
   background: rgba(0, 0, 0, 0.2);
   position: relative;
-  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -43,12 +42,6 @@ header .brand {
   gap: 12px;
   font-weight: 700;
   font-size: 1.2rem;
-}
-
-.nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 
 .lang-select {
@@ -79,6 +72,7 @@ header .brand {
   background: transparent;
   cursor: pointer;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .hamburger-btn span {
@@ -90,17 +84,43 @@ header .brand {
 }
 
 @media (max-width: 640px) {
+  header {
+    flex-wrap: nowrap;
+  }
+
   .hamburger-btn {
     display: flex;
+    order: -1;
+  }
+
+  header .brand {
+    font-size: 1rem;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  header .brand img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .lang-select {
+    flex-shrink: 0;
   }
 
   nav.site-nav {
     display: none;
-    flex-basis: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     flex-direction: column;
-    gap: 10px;
-    padding-top: 12px;
+    gap: 4px;
+    padding: 12px 24px 16px;
+    background: var(--poke-navy);
     border-top: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 20;
   }
 
   nav.site-nav.open {
@@ -109,11 +129,7 @@ header .brand {
 
   nav.site-nav a {
     margin-left: 0;
-  }
-
-  .nav-controls {
-    order: 2;
-    margin-left: auto;
+    padding: 8px 0;
   }
 }
 
